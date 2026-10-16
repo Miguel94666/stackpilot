@@ -7,6 +7,7 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import OrganizationSwitcher from '@/components/OrganizationSwitcher.vue';
 
 const mainNavItems: NavItem[] = [
     {
@@ -53,5 +54,6 @@ const footerNavItems: NavItem[] = [
             <NavUser />
         </SidebarFooter>
     </Sidebar>
+    <OrganizationSwitcher />
     <slot />
 </template>

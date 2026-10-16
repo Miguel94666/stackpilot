@@ -45,6 +45,57 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+
+            'activeOrganization' => function () use ($request) {
+                $user = $request->user();
+
+                if (!$user) {
+                    return null;
+                }
+
+                $organizationId = $request->session()
+                    ->get('active_organization_id');
+
+                if (!$organizationId) {
+                    return null;
+                }
+
+                $organization = $user->organizations()
+                    ->whereKey($organizationId)
+                    ->where('organizations.status', 'active')
+                    ->first();
+
+                if (!$organization) {
+                    return null;
+                }
+
+                return [
+                    'id' => $organization->id,
+                    'name' => $organization->name,
+                    'role' => $organization->pivot->role,
+                ];
+            },
+
+            'availableOrganizations' => function () use ($request) {
+                $user = $request->user();
+
+                if (!$user) {
+                    return [];
+                }
+
+                return $user->organizations()
+                    ->where('organizations.status', 'active')
+                    ->orderBy('organizations.name')
+                    ->get()
+                    ->map(fn ($organization) => [
+                        'id' => $organization->id,
+                        'name' => $organization->name,
+                        'role' => $organization->pivot->role,
+                    ])
+                    ->values()
+                    ->all();
+            },
         ]);
+
     }
 }

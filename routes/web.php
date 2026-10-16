@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\ActiveOrganizationController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -26,4 +27,8 @@ Route::middleware(['auth', 'verified'])
             OrganizationController::class,
             'store',
         ])->name('organizations.store');
+        Route::post(
+            '/organizations/active',
+            [ActiveOrganizationController::class, 'update']
+        )->name('organizations.active.update');
     });
